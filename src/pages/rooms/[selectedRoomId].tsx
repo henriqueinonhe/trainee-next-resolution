@@ -1,10 +1,11 @@
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { SerializedReservation } from "@/infrastructure/outer/bff/models/SerializedReservation";
 import Head from "next/head";
 import { Rooms } from "@/ui/pages/Rooms";
 import { fetchReservations } from "@/infrastructure/inner/services/fetchReservations";
 import { serializeReservation } from "@/infrastructure/outer/bff/services/serializeReservation";
 import { deserializeReservation } from "@/infrastructure/outer/bff/services/deserializeReservation";
+import { getRoomsFromReservations } from "@/domain/services/getRoomsFromReservations";
 
 export type RoomsPageProps = {
   serializedReservations: Array<SerializedReservation>;
@@ -28,7 +29,7 @@ export default function RoomsPage({
   );
 }
 
-export const getServerSideProps: GetServerSideProps<
+export const getStaticProps: GetStaticProps<
   RoomsPageProps,
   {
     selectedRoomId: string;
@@ -45,5 +46,25 @@ export const getServerSideProps: GetServerSideProps<
       serializedReservations,
       selectedRoomId: Number(selectedRoomId),
     },
+    revalidate: 300,
+  };
+};
+
+export const getStaticPaths: GetStaticPaths<{
+  selectedRoomId: string;
+}> = async () => {
+  const reservations = await fetchReservations();
+
+  const rooms = getRoomsFromReservations(reservations);
+
+  const paths = rooms.map((room) => ({
+    params: {
+      selectedRoomId: String(room.id),
+    },
+  }));
+
+  return {
+    paths,
+    fallback: false,
   };
 };

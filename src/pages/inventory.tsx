@@ -35,5 +35,6 @@ export const getStaticProps: GetStaticProps<InventoryPageProps> = async () => {
     props: {
       serializedInventory,
     },
+    revalidate: 300,
   };
 };

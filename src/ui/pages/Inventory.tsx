@@ -9,11 +9,11 @@ export type InventoryProps = {
 };
 
 export const Inventory = ({ inventory }: InventoryProps) => {
-  const { isNavigating } = useIsNavigating();
+  const { delayedIsNavigating } = useIsNavigating();
 
   return (
     <div>
-      {isNavigating && <NavigationOverlay />}
+      {delayedIsNavigating && <NavigationOverlay />}
 
       <ul className={cx.list}>
         {inventory.map((item) => (
