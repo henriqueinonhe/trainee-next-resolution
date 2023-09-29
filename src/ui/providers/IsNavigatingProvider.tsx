@@ -10,7 +10,6 @@ import {
 
 export type IsNavigatingContextValue = {
   isNavigating: boolean;
-  delayedIsNavigating: boolean;
 };
 
 export const IsNavigatingContext = createContext<
@@ -25,23 +24,15 @@ export const IsNavigatingProvider = ({
   children,
 }: IsNavigatingProviderProps) => {
   const [isNavigating, setIsNavigating] = useState(false);
-  const [delayedIsNavigating, setDelayedIsNavigating] = useState(false);
   const router = useRouter();
 
   const listenToNavigation = () => {
-    let timeoutId!: NodeJS.Timeout;
-
     const navigationStarted = () => {
       setIsNavigating(true);
-      timeoutId = setTimeout(() => {
-        setDelayedIsNavigating(true);
-      }, 300);
     };
 
     const navigationEnded = () => {
       setIsNavigating(false);
-      setDelayedIsNavigating(false);
-      clearTimeout(timeoutId);
     };
 
     router.events.on("routeChangeStart", navigationStarted);
@@ -64,9 +55,8 @@ export const IsNavigatingProvider = ({
   const value = useMemo(
     () => ({
       isNavigating,
-      delayedIsNavigating,
     }),
-    [delayedIsNavigating, isNavigating],
+    [isNavigating],
   );
 
   return (
