@@ -18,7 +18,7 @@ export const Students = ({
 }: StudentsProps) => {
   const students = getStudentsFromReservations(reservations);
   const router = useRouter();
-  const { delayedIsNavigating } = useIsNavigating();
+  const { isNavigating } = useIsNavigating();
 
   const handleStudentsDropdownChanged = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -40,12 +40,12 @@ export const Students = ({
     title: `${reservation.room.number} - ${reservation.room.name}`,
     dateStart: reservation.startDate,
     dateEnd: reservation.endDate,
-    group: reservation.id.toString(),
+    group: reservation.room.id.toString(),
   }));
 
   return (
     <div>
-      {delayedIsNavigating && <NavigationOverlay />}
+      {isNavigating && <NavigationOverlay />}
 
       <div className={cx.placeSelectContainer}>
         <select

@@ -15,7 +15,7 @@ export type RoomsProps = {
 export const Rooms = ({ reservations, selectedRoomId }: RoomsProps) => {
   const router = useRouter();
   const rooms = getRoomsFromReservations(reservations);
-  const { delayedIsNavigating } = useIsNavigating();
+  const { isNavigating } = useIsNavigating();
 
   const handleRoomDropdownChanged = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -35,12 +35,12 @@ export const Rooms = ({ reservations, selectedRoomId }: RoomsProps) => {
     title: reservation.student.name,
     dateStart: reservation.startDate,
     dateEnd: reservation.endDate,
-    group: reservation.id.toString(),
+    group: reservation.student.id.toString(),
   }));
 
   return (
     <div>
-      {delayedIsNavigating && <NavigationOverlay />}
+      {isNavigating && <NavigationOverlay />}
 
       <div className={cx.placeSelectContainer}>
         <select value={selectedRoomId} onChange={handleRoomDropdownChanged}>
